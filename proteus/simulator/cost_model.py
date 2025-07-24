@@ -212,7 +212,12 @@ class OpCostModel:
                     group_set.add(tuple(lg))
                     groups_.append(lg)
                     groups_rank_.append(gr)
-
+            ## 打印 groups_ and groups_rank_
+            print('groups:', groups_)
+            print('groups_rank:', groups_rank_)
+            print('len(group):', len(group))
+            print('len(local_rank_groups):', len(local_rank_groups))
+            print('topofile:', topofile)
             _communicators[key] = binding.Communicator(groups_, groups_rank_,
                                                        len(group),
                                                        len(local_rank_groups),
@@ -222,22 +227,23 @@ class OpCostModel:
         type_intra = comm.get_graph_type_intra()
         type_inter = comm.get_graph_type_inter()
         cross_node = comm.get_cross_node()
-
+        print('volume:', volume)
+        print('root:', root)
         if type == 'p2p':
-            # return comm_p2p(volume, bw)
             ct = comm.broadcast(math.ceil(volume * 1e6), root)
+            print('p2p comm cost:', ct)
         elif type == 'reduce':
-            # return comm_all_reduce(volume, bw, len(group))
             ct = comm.reduce(math.ceil(volume * 1e6), root)
+            print('reduce comm cost:', ct)
         elif type == 'all_reduce':
-            # return comm_all_reduce(volume, bw, len(group))
             ct = comm.allreduce(math.ceil(volume * 1e6))
             if len(group) == 8 and 'titan' in OpCostModel.cluster.topo_file:
                 # titanxp all_reduce bandwidth adjust
                 ct = (4.2, ct[1])
+            print('all_reduce comm cost:', ct)
         elif type == 'all_gather':
-            # return comm_all_gather(volume, bw, len(group))
             ct = comm.allgather(math.ceil(volume * 1e6))
+            print('all_gather comm cost:', ct)
         elif type == 'reduce_scatter':
             # return comm_reduce_scatter(volume, bw, len(group))
             ct = comm.reduce_scatter(math.ceil(volume * 1e6))
