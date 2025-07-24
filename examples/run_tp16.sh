@@ -7,7 +7,7 @@ vocab_size=40478
 
 # 并行度
 mp_deg=16           # Tensor Parallel (TP)
-pp_deg=1           # Pipeline Parallel (PP)
+pp_deg=2           # Pipeline Parallel (PP)
 dp_deg=1           # Data Parallel 固定为 1
 
 # 集群文件
@@ -15,12 +15,12 @@ cluster=clusters/dgx1_v100_1ib/n4_g8.json
 bs=32
 
 # 运行模拟
-mpirun -np 16 \
+mpirun -np 32 \
 python megatron_gpt.py \
     -model gpt \
     -global-bs $bs \
     -n-macro-batch 1 \
-    -nlayer 6 \
+    -nlayer 64 \
     -seq-length 256 \
     -hidden-size 256 \
     -nheads 16 \
