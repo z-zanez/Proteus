@@ -71,4 +71,4 @@ class SimTracer:
         plt.legend()
         plt.xlabel('Time (ms)')
         plt.ylabel('Memory (MB)')
-        plt.savefig(f'{trace_file}.jpg')
+        # plt.savefig(f'{trace_file}.jpg')

@@ -445,9 +445,10 @@ if __name__ == '__main__':
 
     if args.pp_deg > 1:
         # set share weight
+        _seq = num_layers + 1 + (2 if args.seq_first else 0)
         graph.set_share_weight([
             stree.root.embedding.word_embeddings.op,
-            getattr(stree.root, f'seq{num_layers + 1 + 2}').op
+            getattr(stree.root, f'seq{_seq}').op
         ], stree)
 
     graph.propagate({})
